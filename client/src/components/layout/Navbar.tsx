@@ -8,7 +8,6 @@ export function Navbar() {
   const navItems = [
     { href: "/", label: "Home", icon: Activity },
     { href: "/analysis", label: "Analysis", icon: Scan },
-    { href: "/models", label: "Model Library", icon: LayoutGrid },
   ];
 
   return (
