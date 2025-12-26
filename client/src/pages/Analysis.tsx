@@ -44,16 +44,29 @@ export default function Analysis() {
     
     setIsAnalyzing(true);
     try {
-      // API Integration: Calls the backend analysis endpoint
-      // When upgraded to full-stack, this will send the image to:
-      // POST /api/analyze - Python backend with AI model
+      // ============================================================
+      // BUTTON → API CHAIN (Connected to Python AI Model)
+      // ============================================================
+      // 1. User clicks "Analyze Scan" button below
+      // 2. This function runs and extracts the uploaded X-ray image
+      // 3. Calls analyzeXray() from @/lib/api.ts
+      // 4. In production, this sends: POST /api/analyze with image
+      // 5. Python backend receives request:
+      //    - Runs inference_template.py
+      //    - Performs clustering (unsupervised learning)
+      //    - Classifies pneumonia phenotype
+      //    - Generates heatmap regions
+      // 6. Returns AI analysis results
+      // 7. Results displayed in the Diagnostic Report panel
+      // ============================================================
+      
       const imageFile = fileInputRef.current.files[0];
       const analysisResult = await analyzeXray(imageFile);
       
       setResult(analysisResult);
     } catch (error) {
       console.error("Analysis failed:", error);
-      // Handle error - show user message
+      // TODO: Show error message to user when backend integration complete
     } finally {
       setIsAnalyzing(false);
     }

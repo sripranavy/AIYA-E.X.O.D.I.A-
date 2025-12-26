@@ -18,6 +18,16 @@ export interface AnalysisResult {
 /**
  * Analyzes an X-ray image using the AI backend.
  * 
+ * CALL CHAIN:
+ * Analysis.tsx (user clicks button) 
+ *   → startAnalysis() function 
+ *   → analyzeXray(imageFile) [THIS FUNCTION]
+ *   → Python backend /api/analyze endpoint
+ *   → inference.py analyze_xray() function
+ *   → AI clustering & classification model
+ *   → Returns analysis results
+ *   → Displayed in Diagnostic Report
+ * 
  * WHEN UPGRADED TO FULL-STACK:
  * Replace this with a real API call:
  * 
@@ -35,9 +45,10 @@ export interface AnalysisResult {
  * }
  * 
  * Your Python backend should have:
- * - POST /api/analyze endpoint
- * - Accepts file upload
- * - Returns AnalysisResult JSON
+ * - POST /api/analyze endpoint in server/routes.ts
+ * - Endpoint accepts file upload
+ * - Calls: from python_backend.inference import analyze_xray
+ * - Returns AnalysisResult JSON (see interface above)
  * - Uses unsupervised clustering for subphenotype detection
  */
 export async function analyzeXray(imageFile: File): Promise<AnalysisResult> {

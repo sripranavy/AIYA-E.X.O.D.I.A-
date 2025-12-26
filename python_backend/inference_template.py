@@ -1,3 +1,13 @@
+# ============================================================
+# FRONTEND BUTTON CHAIN:
+# User clicks "Analyze Scan" button in Analysis.tsx
+#   → startAnalysis() calls analyzeXray(imageFile)
+#   → POST /api/analyze with X-ray image
+#   → This file's analyze_xray() function is called
+#   → Results returned to frontend
+#   → Displayed in Diagnostic Report panel
+# ============================================================
+
 # Template: Replace this with your actual AI model inference code
 
 import numpy as np
@@ -118,20 +128,39 @@ class PneumoniaAnalyzer:
 analyzer = PneumoniaAnalyzer()
 
 
-# API Handler Function
+# ============================================================
+# MAIN ENTRY POINT - Called from Frontend Button
+# ============================================================
 def analyze_xray(image_path: str) -> Dict:
     """
-    This function is called by the API endpoint.
-    The frontend sends X-ray images here.
+    FRONTEND CHAIN ENDPOINT:
+    This function is called when user clicks "Analyze Scan" button
+    
+    Flow:
+    Analysis.tsx → (user clicks button)
+    → startAnalysis() → analyzeXray() [in api.ts]
+    → POST /api/analyze with X-ray image file
+    → Backend routes this to: analyze_xray(image_path)
+    → This function processes the image with your AI model
+    → Returns analysis results (phenotype, severity, findings, heatmap)
+    → Results sent back to frontend
+    → Displayed in Diagnostic Report panel
+    
+    Args:
+        image_path (str): Path to uploaded X-ray image file
+        
+    Returns:
+        dict: {
+            "probability": float (0-100),
+            "phenotype": str ("Bacterial", "Viral", "Fungal", "Normal"),
+            "severity": str ("Low", "Moderate", "Critical"),
+            "findings": list of str,
+            "clusters": cluster assignments from unsupervised learning,
+            "heatmap_regions": [{"x": int, "y": int, "intensity": float}]
+        }
     """
     try:
         result = analyzer.analyze(image_path)
-        return {
-            "success": True,
-            "data": result
-        }
+        return result  # Return results directly to frontend
     except Exception as e:
-        return {
-            "success": False,
-            "error": str(e)
-        }
+        raise Exception(f"Analysis failed: {str(e)}")
