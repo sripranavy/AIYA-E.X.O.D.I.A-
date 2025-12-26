@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, AlertCircle, CheckCircle2, FileText, ScanLine, Activity, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { analyzeXray } from "@/lib/api";
 
 // Mock types for our analysis
 type AnalysisResult = {
@@ -38,29 +39,24 @@ export default function Analysis() {
     }
   };
 
-  const startAnalysis = () => {
+  const startAnalysis = async () => {
+    if (!fileInputRef.current?.files?.[0]) return;
+    
     setIsAnalyzing(true);
-    // Simulate API delay
-    setTimeout(() => {
-      // Mock logic: Randomize result for demo purposes
-      const isSick = Math.random() > 0.3;
-      const phenotypes = ["Bacterial", "Viral", "Fungal"] as const;
-      const severity = ["Low", "Moderate", "Critical"] as const;
+    try {
+      // API Integration: Calls the backend analysis endpoint
+      // When upgraded to full-stack, this will send the image to:
+      // POST /api/analyze - Python backend with AI model
+      const imageFile = fileInputRef.current.files[0];
+      const analysisResult = await analyzeXray(imageFile);
       
-      setResult({
-        probability: isSick ? 75 + Math.floor(Math.random() * 24) : 2 + Math.floor(Math.random() * 10),
-        phenotype: isSick ? phenotypes[Math.floor(Math.random() * phenotypes.length)] : "Normal",
-        severity: isSick ? severity[Math.floor(Math.random() * severity.length)] : "Low",
-        findings: isSick 
-          ? ["Opacity in lower right lobe", "Interstitial markings present", "Pleural effusion suspected"]
-          : ["Clear lung fields", "Normal cardiac silhouette", "No active disease process identified"],
-        heatmapPoints: [
-          { x: 30 + Math.random() * 40, y: 30 + Math.random() * 40, intensity: 0.8 },
-          { x: 40 + Math.random() * 20, y: 50 + Math.random() * 20, intensity: 0.6 }
-        ]
-      });
+      setResult(analysisResult);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      // Handle error - show user message
+    } finally {
       setIsAnalyzing(false);
-    }, 2500);
+    }
   };
 
   const resetAnalysis = () => {
