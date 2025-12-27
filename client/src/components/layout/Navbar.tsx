@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Activity, Scan, Brain, LayoutGrid } from "lucide-react";
+import { Activity, Scan, Brain, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -7,6 +7,7 @@ export function Navbar() {
 
   const navItems = [
     { href: "/", label: "Home", icon: Activity },
+    { href: "/education", label: "About", icon: BookOpen },
     { href: "/analysis", label: "Analysis", icon: Scan },
   ];
 
@@ -15,12 +16,17 @@ export function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/">
           <a className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary border border-primary/50 group-hover:bg-primary/30 transition-colors">
-              <Brain size={18} />
+            <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center text-background border border-primary/50 group-hover:scale-110 transition-transform">
+              <Brain size={18} className="font-bold" />
             </div>
-            <span className="font-sans font-bold text-lg tracking-tight">
-              Pneumo<span className="text-primary">Scan</span> AI
-            </span>
+            <div className="flex flex-col -gap-1">
+              <span className="font-sans font-black text-sm tracking-widest leading-none">
+                E.X.O.D.I.A
+              </span>
+              <span className="text-[10px] text-primary/60 font-mono tracking-wider">
+                Diagnostic Analytics
+              </span>
+            </div>
           </a>
         </Link>
 

@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Analysis from "@/pages/Analysis";
+import Education from "@/pages/Education";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/analysis" component={Analysis} />
+        <Route path="/education" component={Education} />
         <Route component={NotFound} />
       </Switch>
     </div>
